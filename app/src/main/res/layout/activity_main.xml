@@ -5,24 +5,13 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_green_dark">
+    >
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
+        android:id="@+id/fragment_container"
         android:layout_height="match_parent">
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Main"
-            android:textSize="50dp"
-            android:id="@+id/textView"
-            android:layout_marginTop="200dp"
-            android:layout_marginLeft="130dp"/>
-
-
-    </RelativeLayout>
+    </FrameLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
