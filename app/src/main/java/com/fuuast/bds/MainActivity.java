@@ -2,6 +2,7 @@ package com.fuuast.bds;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -11,7 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.google.android.material.navigation.NavigationView;
+
+import org.json.JSONArray;
 
 import java.util.List;
 
@@ -63,8 +70,30 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        AndroidNetworking.initialize(getApplicationContext());
+    }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AndroidNetworking.get("https://fierce-cove-29863.herokuapp.com/getAllUsers/{pageNumber}")
+                .addPathParameter("pageNumber", "0")
+                .addQueryParameter("limit", "3")
+                .addHeaders("token", "1234")
+                .setTag("test")
+                .setPriority(Priority.LOW)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.i("mytag", response.toString());
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Log.e("Error", error.getMessage());
+                    }
+                });
+        Log.i("mytag", "my-message");
     }
 
     @Override
@@ -85,4 +114,35 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    class User1 {
+        public String Name;
+        public String Email;
+    }
+
+    class User2 {
+        public String Name;
+        public String Email;
+        public int Age;
+    }
+    class User {
+        private String Name;
+        private String Email;
+
+        public String getName() {
+            return Name;
+        }
+
+        public void setName(String name) {
+            Name = name;
+        }
+
+        public String getEmail() {
+            return Email;
+        }
+
+        public void setEmail(String email) {
+            Email = email;
+        }
+
+    }
 }
