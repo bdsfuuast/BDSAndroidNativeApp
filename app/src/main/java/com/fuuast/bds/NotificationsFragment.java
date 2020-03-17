@@ -45,21 +45,12 @@ public class NotificationsFragment extends Fragment {
     private void InitNotifications(View view) {
         notifications=new ArrayList<NotificationModel>();
         NotificationModel nm = new NotificationModel();
-        nm.setBody("A+ blood is required at PIMS, Islambad");
-        nm.setTitle("Someone needs your help");
-        nm.setTime("3h ago");
         notifications.add(nm);
 
         NotificationModel  nm1 = new NotificationModel();
-        nm1.setBody("AB+ blood is required at PIMS, Islambad");
-        nm1.setTitle("Someone needs your help");
-        nm1.setTime("7h ago");
         notifications.add(nm1);
 
         NotificationModel nm2 = new NotificationModel();
-        nm2.setBody("O- blood is required at AFIT, Rawalpindi");
-        nm2.setTitle("Someone needs your help");
-        nm2.setTime("14h ago");
         notifications.add(nm2);
 
         InitNotificationsView(view);

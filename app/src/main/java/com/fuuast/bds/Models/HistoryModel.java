@@ -11,9 +11,6 @@ public class HistoryModel {
         return ID;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
-    }
 
     public int getType() {
         return Type;

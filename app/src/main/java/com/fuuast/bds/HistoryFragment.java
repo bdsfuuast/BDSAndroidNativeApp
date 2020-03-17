@@ -1,6 +1,7 @@
 package com.fuuast.bds;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,23 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fuuast.bds.Models.AppDeserializer;
+import com.fuuast.bds.Models.BDSApi;
 import com.fuuast.bds.Models.HistoryModel;
+import com.fuuast.bds.Models.Post;
+import com.fuuast.bds.Models.ProfileModel;
+import com.fuuast.bds.Models.ResponseModel;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HistoryFragment extends Fragment{
     RecyclerView rv_history;
@@ -28,7 +42,43 @@ public class HistoryFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rv_history = view.findViewById(R.id.rv_history);
-        InitHistory(view);
+        //InitHistory(view);
+        test();
+    }
+
+    private void test() {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(ProfileModel.class, new AppDeserializer<ProfileModel>())
+                .create();
+
+        Retrofit retrofit=new Retrofit.Builder()
+                .baseUrl("https://bds-be.syamonix.com/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        BDSApi bdsApi=retrofit.create(BDSApi.class);
+
+        Call<ResponseModel> call = bdsApi.getProfile();
+
+        call.enqueue(new Callback<ResponseModel> () {
+            @Override
+            public void onResponse(Call<ResponseModel> call, Response<ResponseModel>  response) {
+                if(!response.isSuccessful()){
+                    Log.i("mynotSuccessful", "my message"+response.message()+response.code());
+                }
+                ResponseModel pm =response.body();
+                ProfileModel p=(ProfileModel)pm.getData();
+                Log.i("myOK","this: "+ pm.getCode());
+                Log.i("myOK","this: "+ pm.getData());
+                Log.i("myOK","this: "+ p.getFullName());
+            }
+
+            @Override
+            public void onFailure(Call<ResponseModel> call, Throwable t) {
+                Log.i("myErrorthis", t.toString());
+            }
+        });
+        //InitHistoryView(view);
     }
 
     private void InitHistoryView(View view) {
@@ -40,26 +90,32 @@ public class HistoryFragment extends Fragment{
     }
 
     private void InitHistory(View view) {
-        history=new ArrayList<HistoryModel>();
+        Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(HistoryModel.class, new AppDeserializer<List<HistoryModel>>())
+                        .create();
 
-        HistoryModel nm = new HistoryModel();
-        nm.setDescription("You requested for A+ on 1/21/2020 at 12:16 AM");
-        nm.setTitle("Accept");
-        nm.setTime("3h ago");
-        history.add(nm);
+        Retrofit retrofit=new Retrofit.Builder()
+                .baseUrl("https://bds-be.syamonix.com/api/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
 
-        HistoryModel  nm1 = new HistoryModel();
-        nm1.setDescription("You requested for A+ on 1/21/2020 at 12:16 AM");
-        nm1.setTitle("Accept");
-        nm1.setTime("7h ago");
-        history.add(nm1);
+        BDSApi bdsApi=retrofit.create(BDSApi.class);
+        Call<List<HistoryModel>> call = bdsApi.getHistory();
+        call.enqueue(new Callback<List<HistoryModel>>() {
+            @Override
+            public void onResponse(Call<List<HistoryModel>> call, Response<List<HistoryModel>> response) {
+                if(!response.isSuccessful()){
+                    Log.i("mytag", response.message()+response.code());
+                }
+                history =response.body();
+                Log.i("mytag", history.get(0).getDescription());
+            }
 
-        HistoryModel nm2 = new HistoryModel();
-        nm2.setDescription("You accepted a request for A+ blood on 1/21/2020 at 3:18 PM");
-        nm2.setTitle("Accept");
-        nm2.setTime("14h ago");
-        history.add(nm2);
-
-        InitHistoryView(view);
+            @Override
+            public void onFailure(Call<List<HistoryModel>> call, Throwable t) {
+                Log.i("myError", t.getLocalizedMessage());
+            }
+        });
+        //InitHistoryView(view);
     }
 }

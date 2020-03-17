@@ -115,14 +115,13 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("mytag", response.message()+response.code());
                 }
                 List<Post> posts=response.body();
-                for(Post post:posts){
+                Post post=posts.get(0);
                     Log.i("mytag", post.getText());
-                }
             }
 
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
-
+                Log.i("myError", t.getMessage());
             }
         });
         Log.i("mytag", "my-message");
