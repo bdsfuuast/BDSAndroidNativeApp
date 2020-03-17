@@ -31,28 +31,4 @@ public class NotificationModel {
     public String getTime() {
         return Time;
     }
-
-    public void setID(int ID) {
-        this.ID = ID;
-    }
-
-    public void setNotificationActivity(int notificationActivity) {
-        NotificationActivity = notificationActivity;
-    }
-
-    public void setTitle(String title) {
-        Title = title;
-    }
-
-    public void setBody(String body) {
-        Body = body;
-    }
-
-    public void setConfirmed(Boolean confirmed) {
-        Confirmed = confirmed;
-    }
-
-    public void setTime(String time) {
-        this.Time = time;
-    }
 }

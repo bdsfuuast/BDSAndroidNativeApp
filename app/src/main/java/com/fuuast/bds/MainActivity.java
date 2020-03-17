@@ -16,11 +16,19 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.fuuast.bds.Models.BDSApi;
+import com.fuuast.bds.Models.Post;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -76,23 +84,47 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        AndroidNetworking.get("https://fierce-cove-29863.herokuapp.com/getAllUsers/{pageNumber}")
-                .addPathParameter("pageNumber", "0")
-                .addQueryParameter("limit", "3")
-                .addHeaders("token", "1234")
-                .setTag("test")
-                .setPriority(Priority.LOW)
-                .build()
-                .getAsJSONArray(new JSONArrayRequestListener() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.i("mytag", response.toString());
-                    }
-                    @Override
-                    public void onError(ANError error) {
-                        Log.e("Error", error.getMessage());
-                    }
-                });
+//        AndroidNetworking.get("https://fierce-cove-29863.herokuapp.com/getAllUsers/{pageNumber}")
+//                .addPathParameter("pageNumber", "0")
+//                .addQueryParameter("limit", "3")
+//                .addHeaders("token", "1234")
+//                .setTag("test")
+//                .setPriority(Priority.LOW)
+//                .build()
+//                .getAsJSONArray(new JSONArrayRequestListener() {
+//                    @Override
+//                    public void onResponse(JSONArray response) {
+//                        Log.i("mytag", response.toString());
+//                    }
+//                    @Override
+//                    public void onError(ANError error) {
+//                        Log.e("Error", error.getMessage());
+//                    }
+//                });
+
+        Retrofit retrofit=new Retrofit.Builder()
+                .baseUrl("https://jsonplaceholder.typicode.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        BDSApi bdsApi=retrofit.create(BDSApi.class);
+        Call<List<Post>>  call = bdsApi.getPosts();
+        call.enqueue(new Callback<List<Post>>() {
+            @Override
+            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                if(!response.isSuccessful()){
+                    Log.i("mytag", response.message()+response.code());
+                }
+                List<Post> posts=response.body();
+                for(Post post:posts){
+                    Log.i("mytag", post.getText());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Post>> call, Throwable t) {
+
+            }
+        });
         Log.i("mytag", "my-message");
     }
 
