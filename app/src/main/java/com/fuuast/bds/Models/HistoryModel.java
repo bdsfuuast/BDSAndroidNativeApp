@@ -2,7 +2,7 @@ package com.fuuast.bds.Models;
 
 public class HistoryModel {
     public int ID;
-    public int Type;
+    public String Type;
     public String Title;
     public String Description;
     public String Time;
@@ -12,7 +12,7 @@ public class HistoryModel {
     }
 
 
-    public int getType() {
+    public String getType() {
         return Type;
     }
 

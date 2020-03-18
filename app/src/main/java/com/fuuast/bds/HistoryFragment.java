@@ -42,14 +42,10 @@ public class HistoryFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rv_history = view.findViewById(R.id.rv_history);
-        //InitHistory(view);
-        test();
+        InitHistory(view);
     }
 
-    private void test() {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(ProfileModel.class, new AppDeserializer<ProfileModel>())
-                .create();
+    private void InitHistory(final View view) {
 
         Retrofit retrofit=new Retrofit.Builder()
                 .baseUrl("https://bds-be.syamonix.com/api/")
@@ -58,64 +54,35 @@ public class HistoryFragment extends Fragment{
 
         BDSApi bdsApi=retrofit.create(BDSApi.class);
 
-        Call<ResponseModel> call = bdsApi.getProfile();
+        Call<ResponseModel<List<HistoryModel>>> call = bdsApi.getHistory();
 
-        call.enqueue(new Callback<ResponseModel> () {
+        call.enqueue(new Callback<ResponseModel<List<HistoryModel>>> () {
             @Override
-            public void onResponse(Call<ResponseModel> call, Response<ResponseModel>  response) {
+            public void onResponse(Call<ResponseModel<List<HistoryModel>>> call, Response<ResponseModel<List<HistoryModel>>>  response) {
                 if(!response.isSuccessful()){
                     Log.i("mynotSuccessful", "my message"+response.message()+response.code());
                 }
-                ResponseModel pm =response.body();
-                ProfileModel p=(ProfileModel)pm.getData();
-                Log.i("myOK","this: "+ pm.getCode());
-                Log.i("myOK","this: "+ pm.getData());
-                Log.i("myOK","this: "+ p.getFullName());
+                ResponseModel<List<HistoryModel>> resp =response.body();
+
+                List<HistoryModel> hist=resp.getData();
+                Log.i("myok", "count "+hist.size());
+                InitHistoryView(view, hist);
             }
 
             @Override
-            public void onFailure(Call<ResponseModel> call, Throwable t) {
-                Log.i("myErrorthis", t.toString());
+            public void onFailure(Call<ResponseModel<List<HistoryModel>>> call, Throwable t) {
+                Log.i("myErrorthis", t.getMessage());
             }
         });
         //InitHistoryView(view);
     }
 
-    private void InitHistoryView(View view) {
+    private void InitHistoryView(View view, List<HistoryModel> hist) {
         RecyclerView recyclerView = view.findViewById(R.id.rv_history);
-        HistoryAdapter adapter = new HistoryAdapter(this.getContext(), history);
+        HistoryAdapter adapter = new HistoryAdapter(this.getContext(), hist);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
 
         recyclerView.setAdapter(adapter);
     }
 
-    private void InitHistory(View view) {
-        Gson gson = new GsonBuilder()
-                        .registerTypeAdapter(HistoryModel.class, new AppDeserializer<List<HistoryModel>>())
-                        .create();
-
-        Retrofit retrofit=new Retrofit.Builder()
-                .baseUrl("https://bds-be.syamonix.com/api/")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        BDSApi bdsApi=retrofit.create(BDSApi.class);
-        Call<List<HistoryModel>> call = bdsApi.getHistory();
-        call.enqueue(new Callback<List<HistoryModel>>() {
-            @Override
-            public void onResponse(Call<List<HistoryModel>> call, Response<List<HistoryModel>> response) {
-                if(!response.isSuccessful()){
-                    Log.i("mytag", response.message()+response.code());
-                }
-                history =response.body();
-                Log.i("mytag", history.get(0).getDescription());
-            }
-
-            @Override
-            public void onFailure(Call<List<HistoryModel>> call, Throwable t) {
-                Log.i("myError", t.getLocalizedMessage());
-            }
-        });
-        //InitHistoryView(view);
-    }
 }

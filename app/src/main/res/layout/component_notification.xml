@@ -10,7 +10,7 @@
     android:id="@+id/notification_card">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="1"
         >
@@ -21,7 +21,7 @@
             android:id="@+id/notification_thumb"/>
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="10dp"
             android:layout_weight="0.2">
             <TextView
@@ -32,7 +32,7 @@
                 />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="A+ blood is required at PIMS, Islamabad"
                 android:layout_below="@+id/notification_title"

@@ -1,11 +1,11 @@
 package com.fuuast.bds.Models;
 
-public class ResponseModel {
+public class ResponseModel<T> {
     private int Code ;
     private String Message ;
     private String error ;
     private String error_description ;
-    private Object Data ;
+    private T Data ;
 
     public int getCode() {
         return Code;
@@ -23,7 +23,7 @@ public class ResponseModel {
         return error_description;
     }
 
-    public Object getData() {
+    public T getData() {
         return Data;
     }
 }

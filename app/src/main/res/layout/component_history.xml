@@ -10,13 +10,13 @@
     android:id="@+id/history_card">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="1"
         >
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="10dp"
             android:layout_weight="0.2">
             <TextView
@@ -27,7 +27,7 @@
                 />
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="You requested for A+ on 1/21/2020 at 12:16 AM"
                 android:layout_below="@+id/history_title"

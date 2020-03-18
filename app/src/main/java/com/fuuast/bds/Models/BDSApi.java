@@ -10,14 +10,15 @@ public interface BDSApi {
     @GET("posts")
     Call<List<Post>> getPosts();
 
+    @Headers("authorization: 5DPtcqR1c0qAkvvw_5")
     @GET("notifications")
-    Call<List<NotificationModel>> getNotifications();
+    Call<ResponseModel<List<NotificationModel>>> getNotifications();
 
     @Headers("authorization: 5DPtcqR1c0qAkvvw_5")
     @GET("history")
-    Call<List<HistoryModel>> getHistory();
+    Call<ResponseModel<List<HistoryModel>>> getHistory();
 
     @Headers("authorization: 5DPtcqR1c0qAkvvw_5")
     @GET("profile")
-    Call<ResponseModel> getProfile();
+    Call<ResponseModel<ProfileModel>> getProfile();
 }

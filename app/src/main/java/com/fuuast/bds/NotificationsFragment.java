@@ -1,6 +1,7 @@
 package com.fuuast.bds;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,19 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fuuast.bds.Models.BDSApi;
+import com.fuuast.bds.Models.HistoryModel;
 import com.fuuast.bds.Models.NotificationModel;
+import com.fuuast.bds.Models.ResponseModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NotificationsFragment extends Fragment {
     RecyclerView rv_notifications;
@@ -34,25 +44,41 @@ public class NotificationsFragment extends Fragment {
         InitNotifications(view);
     }
 
-    private void InitNotificationsView(View view) {
+    private void InitNotificationsView(View view, List<NotificationModel> list) {
         RecyclerView recyclerView = view.findViewById(R.id.rv_notifications);
-        NotificationsAdapter adapter = new NotificationsAdapter(this.getContext(), notifications);
+        NotificationsAdapter adapter = new NotificationsAdapter(this.getContext(), list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
 
         recyclerView.setAdapter(adapter);
     }
+    private void InitNotifications(final View view) {
 
-    private void InitNotifications(View view) {
-        notifications=new ArrayList<NotificationModel>();
-        NotificationModel nm = new NotificationModel();
-        notifications.add(nm);
+        Retrofit retrofit=new Retrofit.Builder()
+                .baseUrl("https://bds-be.syamonix.com/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-        NotificationModel  nm1 = new NotificationModel();
-        notifications.add(nm1);
+        BDSApi bdsApi=retrofit.create(BDSApi.class);
 
-        NotificationModel nm2 = new NotificationModel();
-        notifications.add(nm2);
+        Call<ResponseModel<List<NotificationModel>>> call = bdsApi.getNotifications();
 
-        InitNotificationsView(view);
+        call.enqueue(new Callback<ResponseModel<List<NotificationModel>>>() {
+            @Override
+            public void onResponse(Call<ResponseModel<List<NotificationModel>>> call, Response<ResponseModel<List<NotificationModel>>> response) {
+                if(!response.isSuccessful()){
+                    Log.i("mynotSuccessful", "my message"+response.message()+response.code());
+                }
+                ResponseModel<List<NotificationModel>> resp =response.body();
+
+                List<NotificationModel> hist=resp.getData();
+                Log.i("myok", "count "+hist.size());
+                InitNotificationsView(view, hist);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseModel<List<NotificationModel>>> call, Throwable t) {
+                Log.i("myErrorthis", t.getMessage());
+            }
+        });
     }
 }
