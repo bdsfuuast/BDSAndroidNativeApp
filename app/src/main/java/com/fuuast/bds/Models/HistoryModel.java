@@ -11,25 +11,19 @@ public class HistoryModel {
         return ID;
     }
 
-
     public String getType() {
         return Type;
     }
-
 
     public String getTitle() {
         return Title;
     }
 
-
     public String getDescription() {
         return Description;
     }
 
-
     public String getTime() {
         return Time;
     }
-
-
 }

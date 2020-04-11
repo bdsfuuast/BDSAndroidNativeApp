@@ -37,6 +37,8 @@
                 android:id="@+id/icon_profile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:padding="6dp"
+                android:src="@drawable/ic_profile"
                 android:layout_weight="0.8" />
 
             <RelativeLayout
@@ -52,7 +54,7 @@
                     android:text="Name" />
 
                 <TextView
-                    android:id="@+id/user_full_name"
+                    android:id="@+id/tv_user_full_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/heading_name"
@@ -78,6 +80,8 @@
                 android:id="@+id/icon_department"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:padding="6dp"
+                android:src="@drawable/ic_department"
                 android:layout_weight="0.8" />
 
             <RelativeLayout
@@ -93,7 +97,7 @@
                     android:text="Department" />
 
                 <TextView
-                    android:id="@+id/department_name"
+                    android:id="@+id/tv_department_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/heading_department"
@@ -119,6 +123,8 @@
                 android:id="@+id/icon_contact"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:padding="6dp"
+                android:src="@drawable/ic_phone"
                 android:layout_weight="0.8" />
 
             <RelativeLayout
@@ -134,7 +140,7 @@
                     android:text="Contact" />
 
                 <TextView
-                    android:id="@+id/user_contact"
+                    android:id="@+id/tv_user_contact"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/heading_contact"
@@ -160,6 +166,8 @@
                 android:id="@+id/icon_blood"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:padding="6dp"
+                android:src="@drawable/ic_profile"
                 android:layout_weight="0.8" />
 
             <RelativeLayout
@@ -175,7 +183,7 @@
                     android:text="Blood Group" />
 
                 <TextView
-                    android:id="@+id/user_bloodgroup"
+                    android:id="@+id/tv_user_bloodgroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/heading_bloodgroup"

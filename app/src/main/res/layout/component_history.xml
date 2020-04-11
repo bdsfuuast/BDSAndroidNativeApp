@@ -8,17 +8,10 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:id="@+id/history_card">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1"
-        >
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_weight="0.2">
+            android:padding="10dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,5 +35,4 @@
                 />
         </RelativeLayout>
 
-    </LinearLayout>
 </androidx.cardview.widget.CardView>

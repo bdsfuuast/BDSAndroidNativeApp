@@ -1,6 +1,7 @@
 package com.fuuast.bds;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,17 +19,18 @@ import java.util.List;
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHolder> {
     List<HistoryModel> history;
     Context context;
-
-    public HistoryAdapter(Context c, List<HistoryModel> n) {
+    OnHistoryListener onHistoryListener;
+    public HistoryAdapter(Context c, List<HistoryModel> n, OnHistoryListener onHistoryListener) {
         history = n;
         context = c;
+        this.onHistoryListener=onHistoryListener;
     }
 
     @NonNull
     @Override
     public HistoryAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.component_history, parent, false);
-        HistoryAdapter.MyViewHolder viewHolder = new HistoryAdapter.MyViewHolder(view);
+        HistoryAdapter.MyViewHolder viewHolder = new HistoryAdapter.MyViewHolder(view,onHistoryListener);
         return viewHolder;
     }
 
@@ -45,16 +47,27 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
         return history.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView historyTitle;
         TextView historyDescription;
         TextView historyTime;
-
-        public MyViewHolder(@NonNull View itemView) {
+        OnHistoryListener onHistoryListener;
+        public MyViewHolder(@NonNull View itemView,OnHistoryListener onHistoryListener) {
             super(itemView);
             historyTitle = itemView.findViewById(R.id.history_title);
             historyDescription = itemView.findViewById(R.id.history_description);
             historyTime = itemView.findViewById(R.id.history_time);
+            this.onHistoryListener=onHistoryListener;
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            this.onHistoryListener.onHistoryClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnHistoryListener{
+        void onHistoryClick(int position);
     }
 }

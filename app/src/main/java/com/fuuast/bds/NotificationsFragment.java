@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fuuast.bds.Models.BDSApi;
+import com.fuuast.bds.Models.BDSApiHelper;
 import com.fuuast.bds.Models.HistoryModel;
 import com.fuuast.bds.Models.NotificationModel;
 import com.fuuast.bds.Models.ResponseModel;
@@ -26,7 +27,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class NotificationsFragment extends Fragment {
+public class NotificationsFragment extends Fragment implements NotificationsAdapter.OnNotificationListener, BDSApiHelper.OnApiCallFinish {
     RecyclerView rv_notifications;
     List<NotificationModel> notifications;
 
@@ -41,44 +42,27 @@ public class NotificationsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rv_notifications = view.findViewById(R.id.rv_notifications);
-        InitNotifications(view);
+        new BDSApiHelper().getNotifications(view,this);
     }
 
-    private void InitNotificationsView(View view, List<NotificationModel> list) {
+    @Override
+    public void onHistoryClick(int position) {
+        Log.i("myClick", "position "+notifications.get(position).getBody());
+    }
+
+    @Override
+    public void OnApiCallSuccess(View view, Object data) {
+        notifications=(List<NotificationModel>)data;
         RecyclerView recyclerView = view.findViewById(R.id.rv_notifications);
-        NotificationsAdapter adapter = new NotificationsAdapter(this.getContext(), list);
+        NotificationsAdapter adapter = new NotificationsAdapter(this.getContext(), notifications,this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
 
         recyclerView.setAdapter(adapter);
     }
-    private void InitNotifications(final View view) {
 
-        Retrofit retrofit=new Retrofit.Builder()
-                .baseUrl("https://bds-be.syamonix.com/api/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    @Override
+    public void OnApiCallFail() {
 
-        BDSApi bdsApi=retrofit.create(BDSApi.class);
-
-        Call<ResponseModel<List<NotificationModel>>> call = bdsApi.getNotifications();
-
-        call.enqueue(new Callback<ResponseModel<List<NotificationModel>>>() {
-            @Override
-            public void onResponse(Call<ResponseModel<List<NotificationModel>>> call, Response<ResponseModel<List<NotificationModel>>> response) {
-                if(!response.isSuccessful()){
-                    Log.i("mynotSuccessful", "my message"+response.message()+response.code());
-                }
-                ResponseModel<List<NotificationModel>> resp =response.body();
-
-                List<NotificationModel> hist=resp.getData();
-                Log.i("myok", "count "+hist.size());
-                InitNotificationsView(view, hist);
-            }
-
-            @Override
-            public void onFailure(Call<ResponseModel<List<NotificationModel>>> call, Throwable t) {
-                Log.i("myErrorthis", t.getMessage());
-            }
-        });
     }
+
 }

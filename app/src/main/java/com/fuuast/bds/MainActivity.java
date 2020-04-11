@@ -4,6 +4,7 @@ package com.fuuast.bds;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -11,11 +12,9 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.fuuast.bds.Models.BDSApi;
 import com.fuuast.bds.Models.Post;
 import com.google.android.material.navigation.NavigationView;
@@ -78,60 +77,16 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-        AndroidNetworking.initialize(getApplicationContext());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        AndroidNetworking.get("https://fierce-cove-29863.herokuapp.com/getAllUsers/{pageNumber}")
-//                .addPathParameter("pageNumber", "0")
-//                .addQueryParameter("limit", "3")
-//                .addHeaders("token", "1234")
-//                .setTag("test")
-//                .setPriority(Priority.LOW)
-//                .build()
-//                .getAsJSONArray(new JSONArrayRequestListener() {
-//                    @Override
-//                    public void onResponse(JSONArray response) {
-//                        Log.i("mytag", response.toString());
-//                    }
-//                    @Override
-//                    public void onError(ANError error) {
-//                        Log.e("Error", error.getMessage());
-//                    }
-//                });
-
-        Retrofit retrofit=new Retrofit.Builder()
-                .baseUrl("https://jsonplaceholder.typicode.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        BDSApi bdsApi=retrofit.create(BDSApi.class);
-        Call<List<Post>>  call = bdsApi.getPosts();
-        call.enqueue(new Callback<List<Post>>() {
-            @Override
-            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-                if(!response.isSuccessful()){
-                    Log.i("mytag", response.message()+response.code());
-                }
-                List<Post> posts=response.body();
-                Post post=posts.get(0);
-                    Log.i("mytag", post.getText());
-            }
-
-            @Override
-            public void onFailure(Call<List<Post>> call, Throwable t) {
-                Log.i("myError", t.getMessage());
-            }
-        });
-        Log.i("mytag", "my-message");
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
     }
 
     @Override
     public void onBackPressed() {
-        if (dl.isDrawerOpen(GravityCompat.START)) {
-            dl.closeDrawer(GravityCompat.START);
-        } else {
+        Fragment fragment =getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if(fragment!=null && !(fragment instanceof HomeFragment)){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        }else{
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
             super.onBackPressed();
         }
     }
@@ -143,37 +98,5 @@ public class MainActivity extends AppCompatActivity {
             return true;
 
         return super.onOptionsItemSelected(item);
-    }
-
-    class User1 {
-        public String Name;
-        public String Email;
-    }
-
-    class User2 {
-        public String Name;
-        public String Email;
-        public int Age;
-    }
-    class User {
-        private String Name;
-        private String Email;
-
-        public String getName() {
-            return Name;
-        }
-
-        public void setName(String name) {
-            Name = name;
-        }
-
-        public String getEmail() {
-            return Email;
-        }
-
-        public void setEmail(String email) {
-            Email = email;
-        }
-
     }
 }
